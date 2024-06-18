@@ -344,6 +344,15 @@ port_channel_interfaces:
   mode: trunk
   vlans: 11-13,21-22,3401-3402
   mlag: 54
+- name: Port-Channel5
+  description: dc1-leaf2-server1_PortChannel dc1-leaf2-server1
+  type: switched
+  shutdown: false
+  mode: trunk
+  vlans: 11-13,21-22
+  native_vlan: 4092
+  spanning_tree_portfast: edge
+  mlag: 5
 ethernet_interfaces:
 - name: Ethernet49
   peer: LEAF2B
@@ -402,6 +411,16 @@ ethernet_interfaces:
   type: port-channel-member
   channel_group:
     id: 54
+    mode: active
+- name: Ethernet5
+  peer: dc1-leaf2-server1
+  peer_interface: PCI1
+  peer_type: server
+  description: dc1-leaf2-server1_PCI1
+  shutdown: false
+  type: port-channel-member
+  channel_group:
+    id: 5
     mode: active
 mlag_configuration:
   domain_id: MLAG

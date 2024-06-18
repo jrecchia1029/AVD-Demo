@@ -226,6 +226,7 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet5 |  dc1-leaf2-server1_iLO | access | 11 | - | - | - |
 | Ethernet51 | LEAF2A_Ethernet53 | *trunk | *11-13,21-22,3401-3402 | *- | *- | 51 |
 | Ethernet52 | LEAF2B_Ethernet53 | *trunk | *11-13,21-22,3401-3402 | *- | *- | 51 |
 
@@ -234,6 +235,14 @@ vlan 3402
 #### Ethernet Interfaces Device Configuration
 
 ```eos
+!
+interface Ethernet5
+   description dc1-leaf2-server1_iLO
+   no shutdown
+   switchport access vlan 11
+   switchport mode access
+   switchport
+   spanning-tree portfast
 !
 interface Ethernet51
    description LEAF2A_Ethernet53

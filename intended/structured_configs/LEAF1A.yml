@@ -349,7 +349,7 @@ port_channel_interfaces:
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 11-12,21-22
+  vlans: 11-13,21-22
   native_vlan: 4092
   spanning_tree_portfast: edge
   mlag: 5
