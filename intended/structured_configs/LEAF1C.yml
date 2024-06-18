@@ -67,6 +67,16 @@ ethernet_interfaces:
   channel_group:
     id: 51
     mode: active
+- name: Ethernet5
+  peer: dc1-leaf1-server1
+  peer_interface: iLO
+  peer_type: server
+  description: dc1-leaf1-server1_iLO
+  shutdown: false
+  type: switched
+  mode: access
+  vlans: '11'
+  spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel51
   description: FLOOR1_LEAFS_Po53

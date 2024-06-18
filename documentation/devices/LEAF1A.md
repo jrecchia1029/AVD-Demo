@@ -286,6 +286,7 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet5 | dc1-leaf1-server1_PCI1 | *trunk | *11-12,21-22 | *4092 | *- | 5 |
 | Ethernet49 | MLAG_PEER_LEAF1B_Ethernet49 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 49 |
 | Ethernet50 | MLAG_PEER_LEAF1B_Ethernet50 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 49 |
 | Ethernet53 | LEAF1C_Ethernet51 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 53 |
@@ -303,6 +304,11 @@ vlan 4094
 #### Ethernet Interfaces Device Configuration
 
 ```eos
+!
+interface Ethernet5
+   description dc1-leaf1-server1_PCI1
+   no shutdown
+   channel-group 5 mode active
 !
 interface Ethernet49
    description MLAG_PEER_LEAF1B_Ethernet49
@@ -347,6 +353,7 @@ interface Ethernet54
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel5 | dc1-leaf1-server1_PortChannel dc1-leaf1-server1 | switched | trunk | 11-12,21-22 | 4092 | - | - | - | 5 | - |
 | Port-Channel49 | MLAG_PEER_LEAF1B_Po49 | switched | trunk | - | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 | Port-Channel53 | LEAF1C_Po51 | switched | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 53 | - |
 | Port-Channel54 | LEAF1D_Po51 | switched | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 54 | - |
@@ -354,6 +361,16 @@ interface Ethernet54
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
+!
+interface Port-Channel5
+   description dc1-leaf1-server1_PortChannel dc1-leaf1-server1
+   no shutdown
+   switchport
+   switchport trunk allowed vlan 11-12,21-22
+   switchport trunk native vlan 4092
+   switchport mode trunk
+   mlag 5
+   spanning-tree portfast
 !
 interface Port-Channel49
    description MLAG_PEER_LEAF1B_Po49
