@@ -1,16 +1,19 @@
 Node Type,Node,Node Interface,Peer Type,Peer Node,Peer Interface,Node Interface Enabled
+l3leaf,LEAF1A,Ethernet5,server,dc1-leaf1-server1,PCI1,True
 l3leaf,LEAF1A,Ethernet49,mlag_peer,LEAF1B,Ethernet49,True
 l3leaf,LEAF1A,Ethernet50,mlag_peer,LEAF1B,Ethernet50,True
 l3leaf,LEAF1A,Ethernet51,spine,SPINE1,Ethernet1,True
 l3leaf,LEAF1A,Ethernet52,spine,SPINE2,Ethernet1,True
 l3leaf,LEAF1A,Ethernet53,l2leaf,LEAF1C,Ethernet51,True
 l3leaf,LEAF1A,Ethernet54,l2leaf,LEAF1D,Ethernet51,True
+l3leaf,LEAF1B,Ethernet5,server,dc1-leaf1-server1,PCI2,True
 l3leaf,LEAF1B,Ethernet49,mlag_peer,LEAF1A,Ethernet49,True
 l3leaf,LEAF1B,Ethernet50,mlag_peer,LEAF1A,Ethernet50,True
 l3leaf,LEAF1B,Ethernet51,spine,SPINE1,Ethernet2,True
 l3leaf,LEAF1B,Ethernet52,spine,SPINE2,Ethernet2,True
 l3leaf,LEAF1B,Ethernet53,l2leaf,LEAF1C,Ethernet52,True
 l3leaf,LEAF1B,Ethernet54,l2leaf,LEAF1D,Ethernet52,True
+l2leaf,LEAF1C,Ethernet5,server,dc1-leaf1-server1,iLO,True
 l2leaf,LEAF1C,Ethernet51,l3leaf,LEAF1A,Ethernet53,True
 l2leaf,LEAF1C,Ethernet52,l3leaf,LEAF1B,Ethernet53,True
 l2leaf,LEAF1D,Ethernet51,l3leaf,LEAF1A,Ethernet54,True
