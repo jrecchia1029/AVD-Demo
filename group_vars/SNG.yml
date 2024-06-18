@@ -1,0 +1,19 @@
+---
+### group_vars/DC1.yml
+
+# local users
+local_users:
+  - name: admin
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$eucN5ngreuExDgwS$xnD7T8jO..GBDX0DUlp.hn.W7yW94xTjSanqgaQGBzPIhDAsyAl9N4oScHvOMvf07uVBFI4mKMxwdVEUVKgY/."
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$XOCcW4/weIt.C2WR$AtbIXCExWUYtwFYNONsRXROqasVjijl3j9HZVXgMIV/favxx3D2uxRH45L2kwD0G1x/K8sn6fIjKiiDgzd0Gr1"
+
+
+# AAA Authorization
+aaa_authorization:
+  exec:
+    default: local

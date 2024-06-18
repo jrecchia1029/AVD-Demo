@@ -1,0 +1,194 @@
+---
+### group_vars/DC1_FABRIC.yml
+
+fabric_name: SNG_FABRIC
+
+# Set Design Type to L2ls
+design:
+  type: l3ls-evpn
+
+mgmt_interface_vrf: "default"
+mgmt_vrf_routing: true
+
+cvp_instance_ips:
+  - 192.168.0.5
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified (as opposed to network_cli via SSH)
+ansible_connection: ansible.netcommon.httpapi
+# Specifies that we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: admin
+ansible_password: admin
+# User escalation (to enter enable mode)
+ansible_become: true
+ansible_become_method: enable
+# Use SSL (HTTPS)
+ansible_httpapi_use_ssl: true
+# Do not try to validate certs
+ansible_httpapi_validate_certs: false
+
+custom_structured_configuration_campus_tag: SNG
+custom_structured_configuration_campus_pod_tag: Pod1
+
+# Spine Switches
+spine:
+  defaults:
+    platform: vEOS-Lab
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    loopback_ipv4_pool: 172.16.255.0/24
+    bgp_as: 65000
+  node_groups:
+    - group: SPINES
+      nodes:
+        - name: SPINE1
+          serial_number: SN-SPINE1
+          id: 1
+          mgmt_ip: 192.168.0.11/24
+        - name: SPINE2
+          serial_number: SN-SPINE2
+          id: 2
+          mgmt_ip: 192.168.0.12/24
+
+# IDF - Leaf Switches
+l3leaf:
+  defaults:
+    platform: vEOS-Lab
+    mlag_peer_ipv4_pool: 192.168.254.0/25
+    mlag_peer_l3_ipv4_pool: 192.168.254.128/25
+    mlag_domain_id: MLAG
+    virtual_router_mac_address: 00:1c:73:00:00:99 
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    mlag_interfaces: [Ethernet49, Ethernet50]
+    loopback_ipv4_pool: 172.16.0.0/24
+    loopback_ipv4_offset: 2
+    vtep_loopback_ipv4_pool: 172.16.1.0/24
+    uplink_ipv4_pool: 172.16.200.0/24
+    uplink_interfaces: [Ethernet51, Ethernet52]
+    uplink_switches: [SPINE1, SPINE2]
+  node_groups:
+    - group: Floor1_Leafs
+      bgp_as: 65001
+      filter:
+        tags: ["all"]
+      nodes:
+        - name: LEAF1A
+          serial_number: SN-LEAF1A
+          id: 1
+          mgmt_ip: 192.168.0.13/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1]
+        - name: LEAF1B
+          serial_number: SN-LEAF1B
+          id: 2
+          mgmt_ip: 192.168.0.14/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2]
+    - group: Floor2_Leafs
+      bgp_as: 65002
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_access_pod_tag: Floor2
+      nodes:
+        - name: LEAF2A
+          serial_number: SN-LEAF2A
+          id: 3
+          mgmt_ip: 192.168.0.17/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3]
+        - name: LEAF2B
+          serial_number: SN-LEAF2B
+          id: 4
+          mgmt_ip: 192.168.0.18/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+    # - group: Floor3_Leafs
+    #   bgp_as: 65003
+    #   filter:
+    #     tags: ["all"]
+    #   # custom_structured_configuration_access_pod_tag: Floor3
+    #   nodes:
+    #     - name: LEAF3A
+    #       serial_number: SN-LEAF3A
+    #       id: 5
+    #       uplink_switch_interfaces: [Ethernet5, Ethernet5]
+    #     - name: LEAF3B
+    #       serial_number: SN-LEAF3B
+    #       id: 6
+    #       uplink_switch_interfaces: [Ethernet6, Ethernet6]
+
+l2leaf:
+  defaults:
+    platform: vEOS-Lab
+    mlag_peer_ipv4_pool: 192.168.254.0/25
+    mlag_domain_id: MLAG
+    spanning_tree_mode: mstp
+    mlag_interfaces: [Ethernet49, Ethernet50]
+    uplink_interfaces: [Ethernet51, Ethernet52]
+  node_groups:
+    - group: Floor1_MLeafs
+      mlag: false
+      uplink_switches: [LEAF1A, LEAF1B]
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_access_pod_tag: Floor1
+      nodes:
+        - name: LEAF1C
+          serial_number: SN-LEAF1C
+          id: 1
+          mgmt_ip: 192.168.0.15/24
+          uplink_switch_interfaces: [Ethernet53, Ethernet53]
+        - name: LEAF1D
+          serial_number: SN-LEAF1D
+          id: 2
+          mgmt_ip: 192.168.0.16/24
+          uplink_switch_interfaces: [Ethernet54, Ethernet54]
+    - group: Floor2_MLeafs
+      mlag: false
+      uplink_switches: [LEAF2A, LEAF2B]
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_access_pod_tag: Floor2
+      nodes:
+        - name: LEAF2C
+          serial_number: SN-LEAF2C
+          id: 3
+          mgmt_ip: 192.168.0.19/24
+          uplink_switch_interfaces: [Ethernet53, Ethernet53]
+        - name: LEAF2D
+          serial_number: SN-LEAF2D
+          id: 4
+          mgmt_ip: 192.168.0.20/24
+          uplink_switch_interfaces: [Ethernet54, Ethernet54]
+    # - group: Floor3_MLeafs
+    #   mlag: false
+    #   uplink_switches: [LEAF3A, LEAF3B]
+    #   filter:
+    #     tags: ["all"]
+    #   # custom_structured_configuration_access_pod_tag: Floor3
+    #   nodes:
+    #     - name: LEAF3C
+    #       serial_number: SN-LEAF3C
+    #       id: 5
+    #       uplink_switch_interfaces: [Ethernet53, Ethernet53]
+    #     - name: LEAF3D
+    #       serial_number: SN-LEAF3D
+    #       id: 6
+    #       uplink_switch_interfaces: [Ethernet54, Ethernet54]
+
+#### Override for vEOS/cEOS Lab Caveats ####
+p2p_uplinks_mtu: 1500
+
+# Underlay Routing Protocol
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
+
+generate_cv_tags:
+  device_tags:
+    - name: Campus
+      data_path: campus_tag
+  device_tags:
+    - name: Campus-Pod
+      data_path: campus_pod_tag
+  device_tags:
+    - name: Access-Pod
+      data_path: access_pod_tag
