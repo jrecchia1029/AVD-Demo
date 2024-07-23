@@ -229,6 +229,7 @@ vlan internal order ascending range 1006 1199
 | 11 | VRF10_VLAN11 | - |
 | 12 | VRF10_VLAN12 | - |
 | 13 | VRF10_VLAN13 | - |
+| 14 | VRF10_VLAN14 | - |
 | 21 | VRF11_VLAN21 | - |
 | 22 | VRF11_VLAN22 | - |
 | 3009 | MLAG_iBGP_VRF10 | LEAF_PEER_L3 |
@@ -250,6 +251,9 @@ vlan 12
 !
 vlan 13
    name VRF10_VLAN13
+!
+vlan 14
+   name VRF10_VLAN14
 !
 vlan 21
    name VRF11_VLAN21
@@ -293,8 +297,8 @@ vlan 4094
 | Ethernet5 | dc1-leaf1-server1_PCI1 | *trunk | *11-13,21-22 | *4092 | *- | 5 |
 | Ethernet49 | MLAG_PEER_LEAF1B_Ethernet49 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 49 |
 | Ethernet50 | MLAG_PEER_LEAF1B_Ethernet50 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 49 |
-| Ethernet53 | LEAF1C_Ethernet51 | *trunk | *11-13,21-22,3401-3402 | *- | *- | 53 |
-| Ethernet54 | LEAF1D_Ethernet51 | *trunk | *11-13,21-22,3401-3402 | *- | *- | 54 |
+| Ethernet53 | LEAF1C_Ethernet51 | *trunk | *11-14,21-22,3401-3402 | *- | *- | 53 |
+| Ethernet54 | LEAF1D_Ethernet51 | *trunk | *11-14,21-22,3401-3402 | *- | *- | 54 |
 
 *Inherited from Port-Channel Interface
 
@@ -359,8 +363,8 @@ interface Ethernet54
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel5 | dc1-leaf1-server1_PortChannel dc1-leaf1-server1 | switched | trunk | 11-13,21-22 | 4092 | - | - | - | 5 | - |
 | Port-Channel49 | MLAG_PEER_LEAF1B_Po49 | switched | trunk | - | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
-| Port-Channel53 | LEAF1C_Po51 | switched | trunk | 11-13,21-22,3401-3402 | - | - | - | - | 53 | - |
-| Port-Channel54 | LEAF1D_Po51 | switched | trunk | 11-13,21-22,3401-3402 | - | - | - | - | 54 | - |
+| Port-Channel53 | LEAF1C_Po51 | switched | trunk | 11-14,21-22,3401-3402 | - | - | - | - | 53 | - |
+| Port-Channel54 | LEAF1D_Po51 | switched | trunk | 11-14,21-22,3401-3402 | - | - | - | - | 54 | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -388,7 +392,7 @@ interface Port-Channel53
    description LEAF1C_Po51
    no shutdown
    switchport
-   switchport trunk allowed vlan 11-13,21-22,3401-3402
+   switchport trunk allowed vlan 11-14,21-22,3401-3402
    switchport mode trunk
    mlag 53
 !
@@ -396,7 +400,7 @@ interface Port-Channel54
    description LEAF1D_Po51
    no shutdown
    switchport
-   switchport trunk allowed vlan 11-13,21-22,3401-3402
+   switchport trunk allowed vlan 11-14,21-22,3401-3402
    switchport mode trunk
    mlag 54
 ```
@@ -459,6 +463,7 @@ interface Loopback11
 | Vlan11 | VRF10_VLAN11 | VRF10 | - | False |
 | Vlan12 | VRF10_VLAN12 | VRF10 | - | False |
 | Vlan13 | VRF10_VLAN13 | VRF10 | - | False |
+| Vlan14 | VRF10_VLAN14 | VRF10 | - | False |
 | Vlan21 | VRF11_VLAN21 | VRF11 | - | False |
 | Vlan22 | VRF11_VLAN22 | VRF11 | - | False |
 | Vlan3009 | MLAG_PEER_L3_iBGP: vrf VRF10 | VRF10 | 1500 | False |
@@ -473,6 +478,7 @@ interface Loopback11
 | Vlan11 |  VRF10  |  -  |  10.10.11.1/24  |  -  |  -  |  -  |  -  |
 | Vlan12 |  VRF10  |  -  |  10.10.12.1/24  |  -  |  -  |  -  |  -  |
 | Vlan13 |  VRF10  |  -  |  10.10.13.1/24  |  -  |  -  |  -  |  -  |
+| Vlan14 |  VRF10  |  -  |  10.10.14.1/24  |  -  |  -  |  -  |  -  |
 | Vlan21 |  VRF11  |  -  |  10.10.21.1/24  |  -  |  -  |  -  |  -  |
 | Vlan22 |  VRF11  |  -  |  10.10.22.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3009 |  VRF10  |  192.168.254.128/31  |  -  |  -  |  -  |  -  |  -  |
@@ -501,6 +507,12 @@ interface Vlan13
    no shutdown
    vrf VRF10
    ip address virtual 10.10.13.1/24
+!
+interface Vlan14
+   description VRF10_VLAN14
+   no shutdown
+   vrf VRF10
+   ip address virtual 10.10.14.1/24
 !
 interface Vlan21
    description VRF11_VLAN21
@@ -559,6 +571,7 @@ interface Vlan4094
 | 11 | 10011 | - | - |
 | 12 | 10012 | - | - |
 | 13 | 10013 | - | - |
+| 14 | 10014 | - | - |
 | 21 | 10021 | - | - |
 | 22 | 10022 | - | - |
 | 3401 | 13401 | - | - |
@@ -583,6 +596,7 @@ interface Vxlan1
    vxlan vlan 11 vni 10011
    vxlan vlan 12 vni 10012
    vxlan vlan 13 vni 10013
+   vxlan vlan 14 vni 10014
    vxlan vlan 21 vni 10021
    vxlan vlan 22 vni 10022
    vxlan vlan 3401 vni 13401
@@ -719,6 +733,7 @@ ASN Notation: asplain
 | 11 | 172.16.0.3:10011 | 10011:10011 | - | - | learned |
 | 12 | 172.16.0.3:10012 | 10012:10012 | - | - | learned |
 | 13 | 172.16.0.3:10013 | 10013:10013 | - | - | learned |
+| 14 | 172.16.0.3:10014 | 10014:10014 | - | - | learned |
 | 21 | 172.16.0.3:10021 | 10021:10021 | - | - | learned |
 | 22 | 172.16.0.3:10022 | 10022:10022 | - | - | learned |
 | 3401 | 172.16.0.3:13401 | 13401:13401 | - | - | learned |
@@ -785,6 +800,11 @@ router bgp 65001
    vlan 13
       rd 172.16.0.3:10013
       route-target both 10013:10013
+      redistribute learned
+   !
+   vlan 14
+      rd 172.16.0.3:10014
+      route-target both 10014:10014
       redistribute learned
    !
    vlan 21
