@@ -128,6 +128,22 @@ router_bgp:
       - 10012:10012
     redistribute_routes:
     - learned
+  - id: 13
+    tenant: TENANT1
+    rd: 172.16.0.3:10013
+    route_targets:
+      both:
+      - 10013:10013
+    redistribute_routes:
+    - learned
+  - id: 14
+    tenant: TENANT1
+    rd: 172.16.0.3:10014
+    route_targets:
+      both:
+      - 10014:10014
+    redistribute_routes:
+    - learned
   - id: 21
     tenant: TENANT1
     rd: 172.16.0.3:10021
@@ -230,6 +246,12 @@ vlans:
 - id: 12
   name: VRF10_VLAN12
   tenant: TENANT1
+- id: 13
+  name: VRF10_VLAN13
+  tenant: TENANT1
+- id: 14
+  name: VRF10_VLAN14
+  tenant: TENANT1
 - id: 3009
   name: MLAG_iBGP_VRF10
   trunk_groups:
@@ -276,6 +298,18 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.10.12.1/24
   vrf: VRF10
+- name: Vlan13
+  tenant: TENANT1
+  description: VRF10_VLAN13
+  shutdown: false
+  ip_address_virtual: 10.10.13.1/24
+  vrf: VRF10
+- name: Vlan14
+  tenant: TENANT1
+  description: VRF10_VLAN14
+  shutdown: false
+  ip_address_virtual: 10.10.14.1/24
+  vrf: VRF10
 - name: Vlan3009
   tenant: TENANT1
   type: underlay_peering
@@ -318,14 +352,14 @@ port_channel_interfaces:
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 11-12,21-22,3401-3402
+  vlans: 11-14,21-22,3401-3402
   mlag: 53
 - name: Port-Channel54
   description: LEAF1D_Po51
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 11-12,21-22,3401-3402
+  vlans: 11-14,21-22,3401-3402
   mlag: 54
 - name: Port-Channel5
   description: dc1-leaf1-server1_PortChannel dc1-leaf1-server1
@@ -472,6 +506,10 @@ vxlan_interface:
         vni: 10011
       - id: 12
         vni: 10012
+      - id: 13
+        vni: 10013
+      - id: 14
+        vni: 10014
       - id: 21
         vni: 10021
       - id: 22
