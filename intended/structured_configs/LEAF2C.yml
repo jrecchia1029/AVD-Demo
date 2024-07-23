@@ -67,32 +67,19 @@ ethernet_interfaces:
   channel_group:
     id: 51
     mode: active
-- name: Ethernet5
-  peer: dc1-leaf2-server1
-  peer_interface: iLO
-  peer_type: server
-  description: dc1-leaf2-server1_iLO
-  shutdown: false
-  type: switched
-  mode: access
-  vlans: '11'
-  spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel51
   description: FLOOR2_LEAFS_Po53
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 11-13,21-22,3401-3402
+  vlans: 11-12,21-22,3401-3402
 vlans:
 - id: 11
   name: VRF10_VLAN11
   tenant: TENANT1
 - id: 12
   name: VRF10_VLAN12
-  tenant: TENANT1
-- id: 13
-  name: VRF10_VLAN13
   tenant: TENANT1
 - id: 21
   name: VRF11_VLAN21

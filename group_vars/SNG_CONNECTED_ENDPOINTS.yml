@@ -34,22 +34,22 @@ servers:
         mode: access
         spanning_tree_portfast: edge
 
-  - name: dc1-leaf2-server1
-    adapters:
-      - endpoint_ports: [ PCI1, PCI2 ]
-        switch_ports: [ Ethernet5, Ethernet5 ]
-        switches: [ LEAF2A, LEAF2B ]
-        vlans: 11-13,21-22
-        native_vlan: 4092
-        mode: trunk
-        spanning_tree_portfast: edge
-        port_channel:
-          description: PortChannel dc1-leaf2-server1
-          mode: active
+  # - name: dc1-leaf2-server1
+  #   adapters:
+  #     - endpoint_ports: [ PCI1, PCI2 ]
+  #       switch_ports: [ Ethernet5, Ethernet5 ]
+  #       switches: [ LEAF2A, LEAF2B ]
+  #       vlans: 11-13,21-22
+  #       native_vlan: 4092
+  #       mode: trunk
+  #       spanning_tree_portfast: edge
+  #       port_channel:
+  #         description: PortChannel dc1-leaf2-server1
+  #         mode: active
 
-      - endpoint_ports: [ iLO ]
-        switch_ports: [ Ethernet5 ]
-        switches: [ LEAF2C ]
-        vlans: 11
-        mode: access
-        spanning_tree_portfast: edge
+  #     - endpoint_ports: [ iLO ]
+  #       switch_ports: [ Ethernet5 ]
+  #       switches: [ LEAF2C ]
+  #       vlans: 11
+  #       mode: access
+  #       spanning_tree_portfast: edge
