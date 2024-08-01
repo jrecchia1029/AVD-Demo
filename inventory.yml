@@ -25,22 +25,23 @@ Campus:
                 #   ansible_host: 172.16.100.113
                 # LEAF3B:
                 #   ansible_host: 172.16.100.114
-            SNG_L2LEAFS:
-              hosts:
-                LEAF1C:
-                  ansible_host: 172.16.100.107
-                LEAF1D:
-                  ansible_host: 172.16.100.108
-                LEAF2C:
-                  ansible_host: 172.16.100.111
-                LEAF2D:
-                  ansible_host: 172.16.100.112
+            # SNG_L2LEAFS:
+            #   hosts:
+            #     LEAF1C:
+            #       ansible_host: 172.16.100.107
+            #     LEAF1D:
+            #       ansible_host: 172.16.100.108
+            #     LEAF2C:
+            #       ansible_host: 172.16.100.111
+            #     LEAF2D:
+            #       ansible_host: 172.16.100.112
                 # LEAF3C:
                 #   ansible_host: 172.16.100.115
                 # LEAF3D:
                 #   ansible_host: 172.16.100.116
     SNG_NETWORK_SERVICES:
       children:
+        SNG_SPINES:
         SNG_L3LEAFS:
         SNG_L2LEAFS:
     SNG_NETWORK_PORTS:

@@ -1,183 +1,7 @@
 hostname: LEAF2A
 is_deployed: true
 serial_number: SN-LEAF2A
-router_bgp:
-  as: '65002'
-  router_id: 172.16.0.5
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: MLAG-IPv4-UNDERLAY-PEER
-    type: ipv4
-    remote_as: '65002'
-    next_hop_self: true
-    description: LEAF2B
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-MLAG-PEER-IN
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 192.168.254.133
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: LEAF2B
-    description: LEAF2B
-  - ip_address: 172.16.200.8
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65000'
-    peer: SPINE1
-    description: SPINE1_Ethernet3
-  - ip_address: 172.16.200.10
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65000'
-    peer: SPINE2
-    description: SPINE2_Ethernet3
-  - ip_address: 172.16.255.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: SPINE1
-    description: SPINE1
-    remote_as: '65000'
-  - ip_address: 172.16.255.2
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: SPINE2
-    description: SPINE2
-    remote_as: '65000'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: VRF10
-    router_id: 172.16.0.5
-    rd: 172.16.0.5:10
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '10:10'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '10:10'
-    redistribute_routes:
-    - source_protocol: connected
-    neighbors:
-    - ip_address: 192.168.254.133
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-    updates:
-      wait_install: true
-  - name: VRF11
-    router_id: 172.16.0.5
-    rd: 172.16.0.5:11
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '11:11'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '11:11'
-    redistribute_routes:
-    - source_protocol: connected
-    neighbors:
-    - ip_address: 192.168.254.133
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-    updates:
-      wait_install: true
-  vlans:
-  - id: 11
-    tenant: TENANT1
-    rd: 172.16.0.5:10011
-    route_targets:
-      both:
-      - 10011:10011
-    redistribute_routes:
-    - learned
-  - id: 12
-    tenant: TENANT1
-    rd: 172.16.0.5:10012
-    route_targets:
-      both:
-      - 10012:10012
-    redistribute_routes:
-    - learned
-  - id: 13
-    tenant: TENANT1
-    rd: 172.16.0.5:10013
-    route_targets:
-      both:
-      - 10013:10013
-    redistribute_routes:
-    - learned
-  - id: 14
-    tenant: TENANT1
-    rd: 172.16.0.5:10014
-    route_targets:
-      both:
-      - 10014:10014
-    redistribute_routes:
-    - learned
-  - id: 21
-    tenant: TENANT1
-    rd: 172.16.0.5:10021
-    route_targets:
-      both:
-      - 10021:10021
-    redistribute_routes:
-    - learned
-  - id: 22
-    tenant: TENANT1
-    rd: 172.16.0.5:10022
-    route_targets:
-      both:
-      - 10022:10022
-    redistribute_routes:
-    - learned
-  - id: 3401
-    tenant: TENANT1
-    rd: 172.16.0.5:13401
-    route_targets:
-      both:
-      - 13401:13401
-    redistribute_routes:
-    - learned
-  - id: 3402
-    tenant: TENANT1
-    rd: 172.16.0.5:13402
-    route_targets:
-      both:
-      - 13402:13402
-    redistribute_routes:
-    - learned
 service_routing_protocols_model: multi-agent
-ip_routing: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.0.5:9910
@@ -198,7 +22,7 @@ spanning_tree:
   mst_instances:
   - id: '0'
     priority: 4096
-  no_spanning_tree_vlan: 4093-4094
+  no_spanning_tree_vlan: '4094'
 local_users:
 - name: admin
   privilege: 15
@@ -210,12 +34,6 @@ local_users:
   sha512_password: $6$XOCcW4/weIt.C2WR$AtbIXCExWUYtwFYNONsRXROqasVjijl3j9HZVXgMIV/favxx3D2uxRH45L2kwD0G1x/K8sn6fIjKiiDgzd0Gr1
 vrfs:
 - name: default
-  ip_routing: true
-- name: VRF10
-  tenant: TENANT1
-  ip_routing: true
-- name: VRF11
-  tenant: TENANT1
   ip_routing: true
 management_interfaces:
 - name: Management1
@@ -230,11 +48,6 @@ management_api_http:
   - name: default
   enable_https: true
 vlans:
-- id: 4093
-  tenant: system
-  name: LEAF_PEER_L3
-  trunk_groups:
-  - LEAF_PEER_L3
 - id: 4094
   tenant: system
   name: MLAG_PEER
@@ -252,21 +65,11 @@ vlans:
 - id: 14
   name: VRF10_VLAN14
   tenant: TENANT1
-- id: 3009
-  name: MLAG_iBGP_VRF10
-  trunk_groups:
-  - LEAF_PEER_L3
-  tenant: TENANT1
 - id: 21
   name: VRF11_VLAN21
   tenant: TENANT1
 - id: 22
   name: VRF11_VLAN22
-  tenant: TENANT1
-- id: 3010
-  name: MLAG_iBGP_VRF11
-  trunk_groups:
-  - LEAF_PEER_L3
   tenant: TENANT1
 - id: 3401
   name: L2_VLAN3401
@@ -275,69 +78,12 @@ vlans:
   name: L2_VLAN3402
   tenant: TENANT1
 vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
-  shutdown: false
-  mtu: 1500
-  ip_address: 192.168.254.132/31
 - name: Vlan4094
   description: MLAG_PEER
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 192.168.254.4/31
-- name: Vlan11
-  tenant: TENANT1
-  description: VRF10_VLAN11
-  shutdown: false
-  ip_address_virtual: 10.10.11.1/24
-  vrf: VRF10
-- name: Vlan12
-  tenant: TENANT1
-  description: VRF10_VLAN12
-  shutdown: false
-  ip_address_virtual: 10.10.12.1/24
-  vrf: VRF10
-- name: Vlan13
-  tenant: TENANT1
-  description: VRF10_VLAN13
-  shutdown: false
-  ip_address_virtual: 10.10.13.1/24
-  vrf: VRF10
-- name: Vlan14
-  tenant: TENANT1
-  description: VRF10_VLAN14
-  shutdown: false
-  ip_address_virtual: 10.10.14.1/24
-  vrf: VRF10
-- name: Vlan3009
-  tenant: TENANT1
-  type: underlay_peering
-  shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf VRF10'
-  vrf: VRF10
-  mtu: 1500
-  ip_address: 192.168.254.132/31
-- name: Vlan21
-  tenant: TENANT1
-  description: VRF11_VLAN21
-  shutdown: false
-  ip_address_virtual: 10.10.21.1/24
-  vrf: VRF11
-- name: Vlan22
-  tenant: TENANT1
-  description: VRF11_VLAN22
-  shutdown: false
-  ip_address_virtual: 10.10.22.1/24
-  vrf: VRF11
-- name: Vlan3010
-  tenant: TENANT1
-  type: underlay_peering
-  shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf VRF11'
-  vrf: VRF11
-  mtu: 1500
-  ip_address: 192.168.254.132/31
 port_channel_interfaces:
 - name: Port-Channel49
   description: MLAG_PEER_LEAF2B_Po49
@@ -345,22 +91,14 @@ port_channel_interfaces:
   shutdown: false
   mode: trunk
   trunk_groups:
-  - LEAF_PEER_L3
   - MLAG
-- name: Port-Channel53
-  description: LEAF2C_Po51
+- name: Port-Channel51
+  description: SPINES_Po3
   type: switched
   shutdown: false
   mode: trunk
   vlans: 11-14,21-22,3401-3402
-  mlag: 53
-- name: Port-Channel54
-  description: LEAF2D_Po51
-  type: switched
-  shutdown: false
-  mode: trunk
-  vlans: 11-14,21-22,3401-3402
-  mlag: 54
+  mlag: 51
 ethernet_interfaces:
 - name: Ethernet49
   peer: LEAF2B
@@ -385,40 +123,22 @@ ethernet_interfaces:
 - name: Ethernet51
   peer: SPINE1
   peer_interface: Ethernet3
-  peer_type: spine
-  description: P2P_LINK_TO_SPINE1_Ethernet3
+  peer_type: l3spine
+  description: SPINE1_Ethernet3
   shutdown: false
-  mtu: 1500
-  type: routed
-  ip_address: 172.16.200.9/31
+  type: port-channel-member
+  channel_group:
+    id: 51
+    mode: active
 - name: Ethernet52
   peer: SPINE2
   peer_interface: Ethernet3
-  peer_type: spine
-  description: P2P_LINK_TO_SPINE2_Ethernet3
-  shutdown: false
-  mtu: 1500
-  type: routed
-  ip_address: 172.16.200.11/31
-- name: Ethernet53
-  peer: LEAF2C
-  peer_interface: Ethernet51
-  peer_type: l2leaf
-  description: LEAF2C_Ethernet51
+  peer_type: l3spine
+  description: SPINE2_Ethernet3
   shutdown: false
   type: port-channel-member
   channel_group:
-    id: 53
-    mode: active
-- name: Ethernet54
-  peer: LEAF2D
-  peer_interface: Ethernet51
-  peer_type: l2leaf
-  description: LEAF2D_Ethernet51
-  shutdown: false
-  type: port-channel-member
-  channel_group:
-    id: 54
+    id: 51
     mode: active
 mlag_configuration:
   domain_id: MLAG
@@ -427,88 +147,8 @@ mlag_configuration:
   peer_link: Port-Channel49
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-loopback_interfaces:
-- name: Loopback0
-  description: EVPN_Overlay_Peering
-  shutdown: false
-  ip_address: 172.16.0.5/32
-- name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
-  shutdown: false
-  ip_address: 172.16.1.5/32
-- name: Loopback10
-  description: VRF10_VTEP_DIAGNOSTICS
-  shutdown: false
-  vrf: VRF10
-  ip_address: 10.255.10.5/32
-- name: Loopback11
-  description: VRF11_VTEP_DIAGNOSTICS
-  shutdown: false
-  vrf: VRF11
-  ip_address: 10.255.11.5/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 172.16.0.0/24 eq 32
-  - sequence: 20
-    action: permit 172.16.1.0/24 eq 32
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
 ip_igmp_snooping:
   globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:00:99
-vxlan_interface:
-  Vxlan1:
-    description: LEAF2A_VTEP
-    vxlan:
-      udp_port: 4789
-      source_interface: Loopback1
-      virtual_router_encapsulation_mac_address: mlag-system-id
-      vlans:
-      - id: 11
-        vni: 10011
-      - id: 12
-        vni: 10012
-      - id: 13
-        vni: 10013
-      - id: 14
-        vni: 10014
-      - id: 21
-        vni: 10021
-      - id: 22
-        vni: 10022
-      - id: 3401
-        vni: 13401
-      - id: 3402
-        vni: 13402
-      vrfs:
-      - name: VRF10
-        vni: 10
-      - name: VRF11
-        vni: 11
-virtual_source_nat_vrfs:
-- name: VRF10
-  ip_address: 10.255.10.5
-- name: VRF11
-  ip_address: 10.255.11.5
 metadata:
   platform: vEOS-Lab
 campus_tag: SNG

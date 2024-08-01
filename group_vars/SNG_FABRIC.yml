@@ -5,7 +5,7 @@ fabric_name: SNG_FABRIC
 
 # Set Design Type to L2ls
 design:
-  type: l3ls-evpn
+  type: l2ls
 
 mgmt_interface_vrf: "default"
 mgmt_vrf_routing: true
@@ -33,15 +33,22 @@ custom_structured_configuration_campus_tag: SNG
 custom_structured_configuration_campus_pod_tag: Pod1
 
 # Spine Switches
-spine:
+l3spine:
   defaults:
     platform: vEOS-Lab
     spanning_tree_mode: mstp
     spanning_tree_priority: 4096
     loopback_ipv4_pool: 172.16.255.0/24
     bgp_as: 65000
+    mlag_interfaces: [Ethernet49, Ethernet50]
+    mlag_peer_ipv4_pool: 192.168.254.0/25
+    mlag_peer_l3_ipv4_pool: 192.168.254.128/25
+    mlag_domain_id: MLAG
+    virtual_router_mac_address: 00:1c:73:00:00:99 
   node_groups:
     - group: SPINES
+      filter:
+        tags: ["all"]
       nodes:
         - name: SPINE1
           serial_number: SN-SPINE1
@@ -53,7 +60,7 @@ spine:
           mgmt_ip: 192.168.0.12/24
 
 # IDF - Leaf Switches
-l3leaf:
+leaf:
   defaults:
     platform: vEOS-Lab
     mlag_peer_ipv4_pool: 192.168.254.0/25
@@ -110,55 +117,57 @@ l3leaf:
     #     - name: LEAF3A
     #       serial_number: SN-LEAF3A
     #       id: 5
+    #       mgmt_ip: 192.168.0.21/24
     #       uplink_switch_interfaces: [Ethernet5, Ethernet5]
     #     - name: LEAF3B
     #       serial_number: SN-LEAF3B
     #       id: 6
+    #       mgmt_ip: 192.168.0.22/24
     #       uplink_switch_interfaces: [Ethernet6, Ethernet6]
 
-l2leaf:
-  defaults:
-    platform: vEOS-Lab
-    mlag_peer_ipv4_pool: 192.168.254.0/25
-    mlag_domain_id: MLAG
-    spanning_tree_mode: mstp
-    mlag_interfaces: [Ethernet49, Ethernet50]
-    uplink_interfaces: [Ethernet51, Ethernet52]
-  node_groups:
-    - group: Floor1_MLeafs
-      mlag: false
-      uplink_switches: [LEAF1A, LEAF1B]
-      filter:
-        tags: ["all"]
-      # custom_structured_configuration_access_pod_tag: Floor1
-      nodes:
-        - name: LEAF1C
-          serial_number: SN-LEAF1C
-          id: 1
-          mgmt_ip: 192.168.0.15/24
-          uplink_switch_interfaces: [Ethernet53, Ethernet53]
-        - name: LEAF1D
-          serial_number: SN-LEAF1D
-          id: 2
-          mgmt_ip: 192.168.0.16/24
-          uplink_switch_interfaces: [Ethernet54, Ethernet54]
-    - group: Floor2_MLeafs
-      mlag: false
-      uplink_switches: [LEAF2A, LEAF2B]
-      filter:
-        tags: ["all"]
-      # custom_structured_configuration_access_pod_tag: Floor2
-      nodes:
-        - name: LEAF2C
-          serial_number: SN-LEAF2C
-          id: 3
-          mgmt_ip: 192.168.0.19/24
-          uplink_switch_interfaces: [Ethernet53, Ethernet53]
-        - name: LEAF2D
-          serial_number: SN-LEAF2D
-          id: 4
-          mgmt_ip: 192.168.0.20/24
-          uplink_switch_interfaces: [Ethernet54, Ethernet54]
+# l2leaf:
+#   defaults:
+#     platform: vEOS-Lab
+#     mlag_peer_ipv4_pool: 192.168.254.0/25
+#     mlag_domain_id: MLAG
+#     spanning_tree_mode: mstp
+#     mlag_interfaces: [Ethernet49, Ethernet50]
+#     uplink_interfaces: [Ethernet51, Ethernet52]
+#   node_groups:
+#     - group: Floor1_MLeafs
+#       mlag: false
+#       uplink_switches: [LEAF1A, LEAF1B]
+#       filter:
+#         tags: ["all"]
+#       # custom_structured_configuration_access_pod_tag: Floor1
+#       nodes:
+#         - name: LEAF1C
+#           serial_number: SN-LEAF1C
+#           id: 1
+#           mgmt_ip: 192.168.0.15/24
+#           uplink_switch_interfaces: [Ethernet53, Ethernet53]
+#         - name: LEAF1D
+#           serial_number: SN-LEAF1D
+#           id: 2
+#           mgmt_ip: 192.168.0.16/24
+#           uplink_switch_interfaces: [Ethernet54, Ethernet54]
+#     - group: Floor2_MLeafs
+#       mlag: false
+#       uplink_switches: [LEAF2A, LEAF2B]
+#       filter:
+#         tags: ["all"]
+#       # custom_structured_configuration_access_pod_tag: Floor2
+#       nodes:
+#         - name: LEAF2C
+#           serial_number: SN-LEAF2C
+#           id: 3
+#           mgmt_ip: 192.168.0.19/24
+#           uplink_switch_interfaces: [Ethernet53, Ethernet53]
+#         - name: LEAF2D
+#           serial_number: SN-LEAF2D
+#           id: 4
+#           mgmt_ip: 192.168.0.20/24
+#           uplink_switch_interfaces: [Ethernet54, Ethernet54]
     # - group: Floor3_MLeafs
     #   mlag: false
     #   uplink_switches: [LEAF3A, LEAF3B]
