@@ -102,7 +102,7 @@
 ### VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)
 
 | VTEP Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
-| --------------------- | ------------------- | ------------------ | ------------------ |
+| ------------------ | ------------------- | ------------------ | ------------------ |
 | 172.16.1.0/24 | 256 | 4 | 1.57 % |
 
 ### VTEP Loopback Node allocation

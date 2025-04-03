@@ -1,0 +1,47 @@
+# inventory.yml
+Campus:
+  children:
+    NOLA:
+      children:
+        NOLA_FABRIC:
+          children:
+            NOLA_SPINES:
+              hosts:
+                NoLa-Spine-1:
+                  ansible_host: 172.16.100.101
+                NoLa-Spine-2:
+                  ansible_host: 172.16.100.102
+            NOLA_L3LEAFS:
+              hosts:
+                NoLa-Leaf-1A:
+                  ansible_host: 172.16.100.105
+                NoLa-Leaf-1B:
+                  ansible_host: 172.16.100.106
+                NoLa-Leaf-2A:
+                  ansible_host: 172.16.100.109
+                # NoLa-Leaf-2B:
+                #   ansible_host: 172.16.100.110
+                NoLa-Leaf-3A:
+                  ansible_host: 172.16.100.113
+                NoLa-Leaf-3B:
+                  ansible_host: 172.16.100.114
+            NOLA_L2LEAFS:
+              hosts:
+                NoLa-Leaf-3C:
+                  ansible_host: 172.16.100.115
+                NoLa-Leaf-3D:
+                  ansible_host: 172.16.100.116
+                NoLa-Leaf-3E:
+                  ansible_host: 172.16.100.117
+    NOLA_NETWORK_SERVICES:
+      children:
+        NOLA_L3LEAFS:
+        NOLA_L2LEAFS:
+    NOLA_NETWORK_PORTS:
+      children:
+        NOLA_L3LEAFS:
+        NOLA_L2LEAFS:
+    NOLA_CONNECTED_ENDPOINTS:
+      children:
+        NOLA_L3LEAFS:
+        NOLA_L2LEAFS:

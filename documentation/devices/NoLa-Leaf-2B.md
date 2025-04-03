@@ -1,4 +1,4 @@
-# LEAF2B
+# NoLa-Leaf-2B
 
 ## Table of Contents
 
@@ -81,9 +81,9 @@ interface Management1
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -291,10 +291,10 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet49 | MLAG_LEAF2A_Ethernet49 | *trunk | *- | *- | *MLAG | 49 |
-| Ethernet50 | MLAG_LEAF2A_Ethernet50 | *trunk | *- | *- | *MLAG | 49 |
-| Ethernet53 | L2_LEAF2C_Ethernet52 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 53 |
-| Ethernet54 | L2_LEAF2D_Ethernet52 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 54 |
+| Ethernet49 | MLAG_NoLa-Leaf-2A_Ethernet49 | *trunk | *- | *- | *MLAG | 49 |
+| Ethernet50 | MLAG_NoLa-Leaf-2A_Ethernet50 | *trunk | *- | *- | *MLAG | 49 |
+| Ethernet53 | L2_NoLa-Leaf-2C_Ethernet52 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 53 |
+| Ethernet54 | L2_NoLa-Leaf-2D_Ethernet52 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 54 |
 
 *Inherited from Port-Channel Interface
 
@@ -302,44 +302,44 @@ vlan 4094
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet51 | P2P_SPINE1_Ethernet4 | - | 172.16.200.13/31 | default | 1500 | False | - | - |
-| Ethernet52 | P2P_SPINE2_Ethernet4 | - | 172.16.200.15/31 | default | 1500 | False | - | - |
+| Ethernet51 | P2P_NoLa-Spine-1_Ethernet4 | - | 172.16.200.13/31 | default | 1500 | False | - | - |
+| Ethernet52 | P2P_NoLa-Spine-2_Ethernet4 | - | 172.16.200.15/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet49
-   description MLAG_LEAF2A_Ethernet49
+   description MLAG_NoLa-Leaf-2A_Ethernet49
    no shutdown
    channel-group 49 mode active
 !
 interface Ethernet50
-   description MLAG_LEAF2A_Ethernet50
+   description MLAG_NoLa-Leaf-2A_Ethernet50
    no shutdown
    channel-group 49 mode active
 !
 interface Ethernet51
-   description P2P_SPINE1_Ethernet4
+   description P2P_NoLa-Spine-1_Ethernet4
    no shutdown
    mtu 1500
    no switchport
    ip address 172.16.200.13/31
 !
 interface Ethernet52
-   description P2P_SPINE2_Ethernet4
+   description P2P_NoLa-Spine-2_Ethernet4
    no shutdown
    mtu 1500
    no switchport
    ip address 172.16.200.15/31
 !
 interface Ethernet53
-   description L2_LEAF2C_Ethernet52
+   description L2_NoLa-Leaf-2C_Ethernet52
    no shutdown
    channel-group 53 mode active
 !
 interface Ethernet54
-   description L2_LEAF2D_Ethernet52
+   description L2_NoLa-Leaf-2D_Ethernet52
    no shutdown
    channel-group 54 mode active
 ```
@@ -352,23 +352,23 @@ interface Ethernet54
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel49 | MLAG_LEAF2A_Port-Channel49 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel53 | L2_LEAF2C_Port-Channel51 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 53 | - |
-| Port-Channel54 | L2_LEAF2D_Port-Channel51 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 54 | - |
+| Port-Channel49 | MLAG_NoLa-Leaf-2A_Port-Channel49 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel53 | L2_NoLa-Leaf-2C_Port-Channel51 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 53 | - |
+| Port-Channel54 | L2_NoLa-Leaf-2D_Port-Channel51 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 54 | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel49
-   description MLAG_LEAF2A_Port-Channel49
+   description MLAG_NoLa-Leaf-2A_Port-Channel49
    no shutdown
    switchport mode trunk
    switchport trunk group MLAG
    switchport
 !
 interface Port-Channel53
-   description L2_LEAF2C_Port-Channel51
+   description L2_NoLa-Leaf-2C_Port-Channel51
    no shutdown
    switchport trunk allowed vlan 11-12,21-22,3401-3402
    switchport mode trunk
@@ -376,7 +376,7 @@ interface Port-Channel53
    mlag 53
 !
 interface Port-Channel54
-   description L2_LEAF2D_Port-Channel51
+   description L2_NoLa-Leaf-2D_Port-Channel51
    no shutdown
    switchport trunk allowed vlan 11-12,21-22,3401-3402
    switchport mode trunk
@@ -550,7 +550,7 @@ interface Vlan4094
 ```eos
 !
 interface Vxlan1
-   description LEAF2B_VTEP
+   description NoLa-Leaf-2B_VTEP
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
@@ -681,9 +681,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| EVPN-OVERLAY-PEERS | True |  - | - | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| EVPN-OVERLAY-PEERS | True |  - | - | default | - |
 
 #### Router BGP VLANs
 
@@ -724,24 +724,24 @@ router bgp 65002
    neighbor MLAG-IPv4-UNDERLAY-PEER peer group
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65002
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
-   neighbor MLAG-IPv4-UNDERLAY-PEER description LEAF2A
+   neighbor MLAG-IPv4-UNDERLAY-PEER description NoLa-Leaf-2A
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor 172.16.200.12 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.16.200.12 remote-as 65000
-   neighbor 172.16.200.12 description SPINE1_Ethernet4
+   neighbor 172.16.200.12 description NoLa-Spine-1_Ethernet4
    neighbor 172.16.200.14 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.16.200.14 remote-as 65000
-   neighbor 172.16.200.14 description SPINE2_Ethernet4
+   neighbor 172.16.200.14 description NoLa-Spine-2_Ethernet4
    neighbor 172.16.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.255.1 remote-as 65000
-   neighbor 172.16.255.1 description SPINE1_Loopback0
+   neighbor 172.16.255.1 description NoLa-Spine-1_Loopback0
    neighbor 172.16.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.255.2 remote-as 65000
-   neighbor 172.16.255.2 description SPINE2_Loopback0
+   neighbor 172.16.255.2 description NoLa-Spine-2_Loopback0
    neighbor 192.168.254.132 peer group MLAG-IPv4-UNDERLAY-PEER
-   neighbor 192.168.254.132 description LEAF2A_Vlan4093
+   neighbor 192.168.254.132 description NoLa-Leaf-2A_Vlan4093
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan 11
@@ -789,7 +789,7 @@ router bgp 65002
       router-id 172.16.0.6
       update wait-install
       neighbor 192.168.254.132 peer group MLAG-IPv4-UNDERLAY-PEER
-      neighbor 192.168.254.132 description LEAF2A_Vlan3009
+      neighbor 192.168.254.132 description NoLa-Leaf-2A_Vlan3009
       redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf VRF11
@@ -799,7 +799,7 @@ router bgp 65002
       router-id 172.16.0.6
       update wait-install
       neighbor 192.168.254.132 peer group MLAG-IPv4-UNDERLAY-PEER
-      neighbor 192.168.254.132 description LEAF2A_Vlan3010
+      neighbor 192.168.254.132 description NoLa-Leaf-2A_Vlan3010
       redistribute connected route-map RM-CONN-2-BGP-VRFS
 ```
 

@@ -7,6 +7,7 @@
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [AAA Authorization](#aaa-authorization)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
@@ -42,20 +43,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | default | 192.168.0.20/24 | - |
+| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.20/24 | - |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | default | - | - |
+| Management1 | OOB_MANAGEMENT | oob | default | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    ip address 192.168.0.20/24
 ```
@@ -104,6 +105,10 @@ management api http-commands
 username admin privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
+
+### Enable Password
+
+Enable password has been disabled
 
 ### AAA Authorization
 
@@ -222,8 +227,8 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet51 | LEAF2A_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
-| Ethernet52 | LEAF2B_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet51 | L2_LEAF2A_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet52 | L2_LEAF2B_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
 
 *Inherited from Port-Channel Interface
 
@@ -232,12 +237,12 @@ vlan 3402
 ```eos
 !
 interface Ethernet51
-   description LEAF2A_Ethernet54
+   description L2_LEAF2A_Ethernet54
    no shutdown
    channel-group 51 mode active
 !
 interface Ethernet52
-   description LEAF2B_Ethernet54
+   description L2_LEAF2B_Ethernet54
    no shutdown
    channel-group 51 mode active
 ```
@@ -248,20 +253,20 @@ interface Ethernet52
 
 ##### L2
 
-| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
-| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel51 | FLOOR2_LEAFS_Po54 | switched | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel51 | L2_Floor2_Leafs_Port-Channel54 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel51
-   description FLOOR2_LEAFS_Po54
+   description L2_Floor2_Leafs_Port-Channel54
    no shutdown
-   switchport
    switchport trunk allowed vlan 11-12,21-22,3401-3402
    switchport mode trunk
+   switchport
 ```
 
 ## Routing

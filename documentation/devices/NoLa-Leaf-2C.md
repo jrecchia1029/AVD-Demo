@@ -1,4 +1,4 @@
-# LEAF2C
+# NoLa-Leaf-2C
 
 ## Table of Contents
 
@@ -65,9 +65,9 @@ interface Management1
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -227,8 +227,8 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet51 | L2_LEAF2A_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
-| Ethernet52 | L2_LEAF2B_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet51 | L2_NoLa-Leaf-2A_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet52 | L2_NoLa-Leaf-2B_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
 
 *Inherited from Port-Channel Interface
 
@@ -237,12 +237,12 @@ vlan 3402
 ```eos
 !
 interface Ethernet51
-   description L2_LEAF2A_Ethernet53
+   description L2_NoLa-Leaf-2A_Ethernet53
    no shutdown
    channel-group 51 mode active
 !
 interface Ethernet52
-   description L2_LEAF2B_Ethernet53
+   description L2_NoLa-Leaf-2B_Ethernet53
    no shutdown
    channel-group 51 mode active
 ```

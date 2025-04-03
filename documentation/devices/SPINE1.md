@@ -7,6 +7,7 @@
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [AAA Authorization](#aaa-authorization)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
@@ -43,20 +44,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | default | 192.168.0.11/24 | - |
+| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.11/24 | - |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | default | - | - |
+| Management1 | OOB_MANAGEMENT | oob | default | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    ip address 192.168.0.11/24
 ```
@@ -105,6 +106,10 @@ management api http-commands
 username admin privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
+
+### Enable Password
+
+Enable password has been disabled
 
 ### AAA Authorization
 
@@ -185,40 +190,40 @@ vlan internal order ascending range 1006 1199
 
 ##### IPv4
 
-| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_LEAF1A_Ethernet51 | routed | - | 172.16.200.0/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_LEAF1B_Ethernet51 | routed | - | 172.16.200.4/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_LEAF2A_Ethernet51 | routed | - | 172.16.200.8/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_LEAF2B_Ethernet51 | routed | - | 172.16.200.12/31 | default | 1500 | False | - | - |
+| Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 | P2P_LEAF1A_Ethernet51 | - | 172.16.200.0/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_LEAF1B_Ethernet51 | - | 172.16.200.4/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_LEAF2A_Ethernet51 | - | 172.16.200.8/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_LEAF2B_Ethernet51 | - | 172.16.200.12/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_LEAF1A_Ethernet51
+   description P2P_LEAF1A_Ethernet51
    no shutdown
    mtu 1500
    no switchport
    ip address 172.16.200.0/31
 !
 interface Ethernet2
-   description P2P_LINK_TO_LEAF1B_Ethernet51
+   description P2P_LEAF1B_Ethernet51
    no shutdown
    mtu 1500
    no switchport
    ip address 172.16.200.4/31
 !
 interface Ethernet3
-   description P2P_LINK_TO_LEAF2A_Ethernet51
+   description P2P_LEAF2A_Ethernet51
    no shutdown
    mtu 1500
    no switchport
    ip address 172.16.200.8/31
 !
 interface Ethernet4
-   description P2P_LINK_TO_LEAF2B_Ethernet51
+   description P2P_LEAF2B_Ethernet51
    no shutdown
    mtu 1500
    no switchport
@@ -233,20 +238,20 @@ interface Ethernet4
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 172.16.255.1/32 |
+| Loopback0 | ROUTER_ID | default | 172.16.255.1/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | - |
+| Loopback0 | ROUTER_ID | default | - |
 
 #### Loopback Interfaces Device Configuration
 
 ```eos
 !
 interface Loopback0
-   description EVPN_Overlay_Peering
+   description ROUTER_ID
    no shutdown
    ip address 172.16.255.1/32
 ```
@@ -341,9 +346,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -351,9 +356,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 172.16.255.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -366,16 +371,16 @@ router bgp 65000
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 172.16.0.3 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.0.3 remote-as 65001
-   neighbor 172.16.0.3 description LEAF1A
+   neighbor 172.16.0.3 description LEAF1A_Loopback0
    neighbor 172.16.0.4 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.0.4 remote-as 65001
-   neighbor 172.16.0.4 description LEAF1B
+   neighbor 172.16.0.4 description LEAF1B_Loopback0
    neighbor 172.16.0.5 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.0.5 remote-as 65002
-   neighbor 172.16.0.5 description LEAF2A
+   neighbor 172.16.0.5 description LEAF2A_Loopback0
    neighbor 172.16.0.6 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.0.6 remote-as 65002
-   neighbor 172.16.0.6 description LEAF2B
+   neighbor 172.16.0.6 description LEAF2B_Loopback0
    neighbor 172.16.200.1 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.16.200.1 remote-as 65001
    neighbor 172.16.200.1 description LEAF1A_Ethernet51

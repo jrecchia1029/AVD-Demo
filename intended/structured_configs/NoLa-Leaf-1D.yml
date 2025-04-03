@@ -1,0 +1,140 @@
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  disable_aaa: false
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet51
+  description: L2_NoLa-Leaf-1A_Ethernet54
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: NoLa-Leaf-1A
+  peer_interface: Ethernet54
+  peer_type: l3leaf
+- name: Ethernet52
+  description: L2_NoLa-Leaf-1B_Ethernet54
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: NoLa-Leaf-1B
+  peer_interface: Ethernet54
+  peer_type: l3leaf
+hostname: NoLa-Leaf-1D
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$eucN5ngreuExDgwS$xnD7T8jO..GBDX0DUlp.hn.W7yW94xTjSanqgaQGBzPIhDAsyAl9N4oScHvOMvf07uVBFI4mKMxwdVEUVKgY/.
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$XOCcW4/weIt.C2WR$AtbIXCExWUYtwFYNONsRXROqasVjijl3j9HZVXgMIV/favxx3D2uxRH45L2kwD0G1x/K8sn6fIjKiiDgzd0Gr1
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: default
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.16/24
+  type: oob
+metadata:
+  platform: vEOS-Lab
+  fabric_name: NOLA_FABRIC
+  cv_tags:
+    device_tags:
+    - name: topology_hint_network_type
+      value: campusV2
+    - name: topology_hint_type
+      value: Member-Leaf
+    - name: Campus
+      value: NoLa
+    - name: Campus-Pod
+      value: BourbonSt
+    - name: Access-Pod
+      value: Floor1
+    interface_tags:
+    - interface: Ethernet51
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+    - interface: Ethernet52
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+    - interface: Management1
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Management
+port_channel_interfaces:
+- name: Port-Channel51
+  description: L2_Floor1_Leafs_Port-Channel54
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 32768
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VRF10_VLAN11
+  tenant: TENANT1
+- id: 12
+  name: VRF10_VLAN12
+  tenant: TENANT1
+- id: 21
+  name: VRF11_VLAN21
+  tenant: TENANT1
+- id: 22
+  name: VRF11_VLAN22
+  tenant: TENANT1
+- id: 3401
+  name: L2_VLAN3401
+  tenant: TENANT1
+- id: 3402
+  name: L2_VLAN3402
+  tenant: TENANT1
+vrfs:
+- name: default
+  ip_routing: true
+serial_number: SN-NoLa-Leaf-1D

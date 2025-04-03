@@ -1,0 +1,292 @@
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - apiserver.arista.io:443
+  cvauth:
+    method: token-secure
+    token_file: /tmp/cv-onboarding-token
+  cvvrf: default
+  disable_aaa: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet49
+  description: MLAG_NoLa-Leaf-3A_Ethernet49
+  shutdown: false
+  channel_group:
+    id: 49
+    mode: active
+  peer: NoLa-Leaf-3A
+  peer_interface: Ethernet49
+  peer_type: mlag_peer
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 4092
+- name: Ethernet50
+  description: MLAG_NoLa-Leaf-3A_Ethernet50
+  shutdown: false
+  channel_group:
+    id: 49
+    mode: active
+  peer: NoLa-Leaf-3A
+  peer_interface: Ethernet50
+  peer_type: mlag_peer
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 4092
+- name: Ethernet51
+  description: L2_NoLa-Spine-1_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: NoLa-Spine-1
+  peer_interface: Ethernet5
+  peer_type: l3spine
+- name: Ethernet52
+  description: L2_NoLa-Spine-2_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: NoLa-Spine-2
+  peer_interface: Ethernet5
+  peer_type: l3spine
+- name: Ethernet53
+  description: L2_NoLa-Leaf-3C_Ethernet26
+  shutdown: false
+  channel_group:
+    id: 53
+    mode: active
+  peer: NoLa-Leaf-3C
+  peer_interface: Ethernet26
+  peer_type: leaf
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 4092
+- name: Ethernet54
+  description: L2_NoLa-Leaf-3D_Ethernet26
+  shutdown: false
+  channel_group:
+    id: 54
+    mode: active
+  peer: NoLa-Leaf-3D
+  peer_interface: Ethernet26
+  peer_type: leaf
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 4092
+- name: Ethernet55
+  description: L2_NoLa-Leaf-3E_Ethernet26
+  shutdown: false
+  channel_group:
+    id: 55
+    mode: active
+  peer: NoLa-Leaf-3E
+  peer_interface: Ethernet26
+  peer_type: leaf
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 4092
+hostname: NoLa-Leaf-3B
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+local_users:
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$ikGzKyb6w4yEqLly$mJLofKfPrT2Mx6UffrY2dwFXuTCbtf2Okjfu9CgyuduVdN3WIrq9quRZXXFjrRI754ewFQ3uZSlwSEKAe2zbP1
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: default
+management_interfaces:
+- name: Management1
+  lldp:
+    transmit: false
+    receive: false
+metadata:
+  platform: vEOS-Lab
+  fabric_name: NOLA_FABRIC
+  cv_tags:
+    device_tags:
+    - name: topology_hint_network_type
+      value: campusV2
+    - name: topology_hint_type
+      value: Leaf
+    - name: Campus
+      value: NoLa
+    - name: Campus-Pod
+      value: BourbonSt
+    - name: Access-Pod
+      value: Floor3
+    interface_tags:
+    - interface: Ethernet49
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: MLAG
+    - interface: Ethernet50
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: MLAG
+    - interface: Ethernet51
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+    - interface: Ethernet52
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+    - interface: Ethernet53
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Downlink
+    - interface: Ethernet54
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Downlink
+    - interface: Ethernet55
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Downlink
+mlag_configuration:
+  domain_id: MLAG
+  local_interface: Vlan4094
+  peer_address: 192.168.254.8
+  peer_link: Port-Channel49
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel49
+  description: MLAG_NoLa-Leaf-3A_Port-Channel49
+  shutdown: false
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel51
+  description: L2_SPINES_Port-Channel4
+  shutdown: false
+  mlag: 51
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '4092'
+- name: Port-Channel53
+  description: L2_NoLa-Leaf-3C_Port-Channel25
+  shutdown: false
+  mlag: 53
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402,4092
+- name: Port-Channel54
+  description: L2_NoLa-Leaf-3D_Port-Channel25
+  shutdown: false
+  mlag: 54
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402,4092
+- name: Port-Channel55
+  description: L2_NoLa-Leaf-3E_Port-Channel25
+  shutdown: false
+  mlag: 55
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402,4092
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- destination_address_prefix: 0.0.0.0/0
+  gateway: 10.40.92.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 192.168.254.9/31
+  mtu: 1500
+  no_autostate: true
+- name: Vlan4092
+  description: Inband Management
+  shutdown: false
+  ip_address: 10.40.92.9/24
+  mtu: 1500
+  type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4092
+  name: INBAND_MGMT
+  tenant: system
+vrfs:
+- name: default
+  ip_routing: true
+serial_number: aafb7c8c056e41b69801443bd3855464

@@ -1,0 +1,177 @@
+---
+### group_vars/DC1_FABRIC.yml
+
+fabric_name: NOLA_FABRIC
+
+# Set Design Type to L2ls
+design:
+  type: l2ls
+
+mgmt_interface_vrf: "default"
+mgmt_vrf_routing: true
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified (as opposed to network_cli via SSH)
+ansible_connection: ansible.netcommon.httpapi
+# Specifies that we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: admin
+ansible_password: admin
+# User escalation (to enter enable mode)
+ansible_become: true
+ansible_become_method: enable
+# Use SSL (HTTPS)
+ansible_httpapi_use_ssl: true
+# Do not try to validate certs
+ansible_httpapi_validate_certs: false
+
+generate_cv_tags:
+  topology_hints: true
+  campus_fabric: true
+
+# Spine Switches
+l3spine:
+  defaults:
+    campus: NoLa
+    campus_pod: BourbonSt
+    platform: vEOS-Lab
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    mlag_interfaces: [Ethernet49/1, Ethernet50/1]
+    mlag_peer_ipv4_pool: 192.168.254.0/25
+    mlag_peer_l3_ipv4_pool: 192.168.254.128/25
+    virtual_router_mac_address: 00:1c:73:00:00:99 
+    loopback_ipv4_pool: 172.16.255.0/24
+    bgp_as: 65000
+    structured_config:
+      vlan_interfaces:
+        - name: Vlan4092
+          ip_helpers:
+            - ip_helper: 172.16.254.253
+  node_groups:
+    - group: SPINES
+      filter:
+        tags: ["all"]
+      nodes:
+        - name: NoLa-Spine-1
+          serial_number: 70b2dff9b4984bfea948c308937c91d9
+          id: 1
+          mgmt_ip: 192.168.0.11/24
+        - name: NoLa-Spine-2
+          serial_number: 35c8e2b9a28446a6bfcc27803d720fc2
+          id: 2
+          mgmt_ip: 192.168.0.12/24
+
+# IDF - Leaf Switches
+leaf:
+  defaults:
+    campus: NoLa
+    campus_pod: BourbonSt
+    platform: vEOS-Lab
+    mlag_peer_ipv4_pool: 192.168.254.0/25
+    mlag_peer_l3_ipv4_pool: 192.168.254.128/25
+    mlag_domain_id: MLAG
+    virtual_router_mac_address: 00:1c:73:00:00:99 
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    mlag_interfaces: [Ethernet49, Ethernet50]
+    loopback_ipv4_pool: 172.16.0.0/24
+    loopback_ipv4_offset: 2
+    vtep_loopback_ipv4_pool: 172.16.1.0/24
+    uplink_ipv4_pool: 172.16.200.0/24
+    uplink_switches: [NoLa-Spine-1, NoLa-Spine-2]
+    inband_ztp: true
+    inband_mgmt_vlan: 4092
+    inband_mgmt_subnet: 10.40.92.0/24
+  node_groups:
+    - group: Floor1_Leafs
+      campus_access_pod: Floor1
+      bgp_as: 65001
+      filter:
+        tags: ["all"]
+      uplink_interfaces: [Ethernet51, Ethernet52]
+      nodes:
+        - name: NoLa-Leaf-1A
+          serial_number: 71ad9035eb744147ad17336d45d1ecf7
+          id: 1
+          mgmt_ip: 192.168.0.13/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1]
+        - name: NoLa-Leaf-1B
+          serial_number: 29836c5c96c742fca0fb0c3423215a51
+          id: 2
+          mgmt_ip: 192.168.0.14/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2]
+    - group: Floor2_Leafs
+      campus_access_pod: Floor2
+      bgp_as: 65002
+      uplink_interfaces: [Ethernet97/1, Ethernet98/1]
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_campus_access_pod_tag: Floor2
+      nodes:
+        - name: NoLa-Leaf-2A
+          serial_number: a9522b7e2e88434aadb6c390488fd732
+          id: 3
+          mgmt_ip: 192.168.0.17/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3]
+        # - name: NoLa-Leaf-2B
+        #   serial_number: SN-NoLa-Leaf-2B
+        #   id: 4
+        #   mgmt_ip: 192.168.0.18/24
+        #   uplink_switch_interfaces: [Ethernet4, Ethernet4]
+    - group: Floor3_Leafs
+      campus_access_pod: Floor3
+      bgp_as: 65003
+      uplink_interfaces: [Ethernet51, Ethernet52]
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_campus_access_pod_tag: Floor3
+      nodes:
+        - name: NoLa-Leaf-3A
+          serial_number: caa829d9d7934b60a659ff51f24d5f44
+          id: 5
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+        - name: NoLa-Leaf-3B
+          serial_number: aafb7c8c056e41b69801443bd3855464
+          id: 6
+          uplink_switch_interfaces: [Ethernet5, Ethernet5]
+    - group: Floor3_MLeafs
+      campus_access_pod: Floor3
+      mlag: false
+      uplink_interfaces: [Ethernet25, Ethernet26]
+      uplink_switches: [NoLa-Leaf-3A, NoLa-Leaf-3B]
+      filter:
+        tags: ["all"]
+      # custom_structured_configuration_campus_access_pod_tag: Floor3
+      nodes:
+        - name: NoLa-Leaf-3C
+          serial_number: ed54e843eda44a4d9e37cda870bf24c9
+          id: 7
+          uplink_switch_interfaces: [Ethernet53, Ethernet53]
+        - name: NoLa-Leaf-3D
+          serial_number: 11ef492f59d54586811b4aadd9c4b3e3
+          id: 8
+          uplink_switch_interfaces: [Ethernet54, Ethernet54]
+        - name: NoLa-Leaf-3E
+          serial_number: 2dddf9d81e6c4a629d7bb73ea7bd5cbb
+          id: 9
+          uplink_switch_interfaces: [Ethernet55, Ethernet55]
+
+#### Override for vEOS/cEOS Lab Caveats ####
+p2p_uplinks_mtu: 1500
+
+# Underlay Routing Protocol
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
+
+# generate_cv_tags:
+#   device_tags:
+#     - name: Campus
+#       data_path: campus_tag
+#   device_tags:
+#     - name: Campus-Pod
+#       data_path: campus_pod_tag
+#   device_tags:
+#     - name: Access-Pod
+#       data_path: campus_access_pod_tag

@@ -1,9 +1,12 @@
-# LEAF2C
+# NoLa-Leaf-2A
 
 ## Table of Contents
 
 - [Management](#management)
+  - [Agents](#agents)
   - [Management Interfaces](#management-interfaces)
+  - [IP Name Servers](#ip-name-servers)
+  - [NTP](#ntp)
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
@@ -23,10 +26,12 @@
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
+  - [VLAN Interfaces](#vlan-interfaces)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
+  - [Static Routes](#static-routes)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [VRF Instances](#vrf-instances)
@@ -34,6 +39,23 @@
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
 
 ## Management
+
+### Agents
+
+#### Agent KernelFib
+
+##### Environment Variables
+
+| Name | Value |
+| ---- | ----- |
+| KERNELFIB_PROGRAM_ALL_ECMP | 'true' |
+
+#### Agents Device Configuration
+
+```eos
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
+```
 
 ### Management Interfaces
 
@@ -43,7 +65,7 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.19/24 | - |
+| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.17/24 | - |
 
 ##### IPv6
 
@@ -58,16 +80,53 @@
 interface Management1
    description OOB_MANAGEMENT
    no shutdown
-   ip address 192.168.0.19/24
+   ip address 192.168.0.17/24
+   no lldp transmit
+   no lldp receive
+```
+
+### IP Name Servers
+
+#### IP Name Servers Summary
+
+| Name Server | VRF | Priority |
+| ----------- | --- | -------- |
+| 169.254.169.254 | default | - |
+| 8.8.8.8 | default | - |
+| 1.1.1.1 | default | - |
+
+#### IP Name Servers Device Configuration
+
+```eos
+ip name-server vrf default 1.1.1.1
+ip name-server vrf default 8.8.8.8
+ip name-server vrf default 169.254.169.254
+```
+
+### NTP
+
+#### NTP Summary
+
+##### NTP Servers
+
+| Server | VRF | Preferred | Burst | iBurst | Version | Min Poll | Max Poll | Local-interface | Key |
+| ------ | --- | --------- | ----- | ------ | ------- | -------- | -------- | --------------- | --- |
+| pool.ntp.org | default | - | - | - | - | - | - | - | - |
+
+#### NTP Device Configuration
+
+```eos
+!
+ntp server pool.ntp.org
 ```
 
 ### Management API HTTP
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -95,14 +154,12 @@ management api http-commands
 
 | User | Privilege | Role | Disabled | Shell |
 | ---- | --------- | ---- | -------- | ----- |
-| admin | 15 | network-admin | False | - |
 | cvpadmin | 15 | network-admin | False | - |
 
 #### Local Users Device Configuration
 
 ```eos
 !
-username admin privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
 
@@ -135,14 +192,14 @@ aaa authorization exec default local
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | apiserver.arista.io:443 | default | token-secure,/tmp/cv-onboarding-token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=default -disableaaa -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -156,14 +213,14 @@ STP mode: **mstp**
 
 | Instance(s) | Priority |
 | -------- | -------- |
-| 0 | 32768 |
+| 0 | 4096 |
 
 ### Spanning Tree Device Configuration
 
 ```eos
 !
 spanning-tree mode mstp
-spanning-tree mst 0 priority 32768
+spanning-tree mst 0 priority 4096
 ```
 
 ## Internal VLAN Allocation Policy
@@ -187,34 +244,14 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
-| 11 | VRF10_VLAN11 | - |
-| 12 | VRF10_VLAN12 | - |
-| 21 | VRF11_VLAN21 | - |
-| 22 | VRF11_VLAN22 | - |
-| 3401 | L2_VLAN3401 | - |
-| 3402 | L2_VLAN3402 | - |
+| 4092 | INBAND_MGMT | - |
 
 ### VLANs Device Configuration
 
 ```eos
 !
-vlan 11
-   name VRF10_VLAN11
-!
-vlan 12
-   name VRF10_VLAN12
-!
-vlan 21
-   name VRF11_VLAN21
-!
-vlan 22
-   name VRF11_VLAN22
-!
-vlan 3401
-   name L2_VLAN3401
-!
-vlan 3402
-   name L2_VLAN3402
+vlan 4092
+   name INBAND_MGMT
 ```
 
 ## Interfaces
@@ -227,8 +264,8 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet51 | L2_LEAF2A_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
-| Ethernet52 | L2_LEAF2B_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet97/1 | L2_NoLa-Spine-1_Ethernet3 | *trunk | *4092 | *- | *- | 971 |
+| Ethernet98/1 | L2_NoLa-Spine-2_Ethernet3 | *trunk | *4092 | *- | *- | 971 |
 
 *Inherited from Port-Channel Interface
 
@@ -236,15 +273,15 @@ vlan 3402
 
 ```eos
 !
-interface Ethernet51
-   description L2_LEAF2A_Ethernet53
+interface Ethernet97/1
+   description L2_NoLa-Spine-1_Ethernet3
    no shutdown
-   channel-group 51 mode active
+   channel-group 971 mode active
 !
-interface Ethernet52
-   description L2_LEAF2B_Ethernet53
+interface Ethernet98/1
+   description L2_NoLa-Spine-2_Ethernet3
    no shutdown
-   channel-group 51 mode active
+   channel-group 971 mode active
 ```
 
 ### Port-Channel Interfaces
@@ -255,18 +292,43 @@ interface Ethernet52
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel51 | L2_Floor2_Leafs_Port-Channel53 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
+| Port-Channel971 | L2_SPINES_Port-Channel3 | trunk | 4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
-interface Port-Channel51
-   description L2_Floor2_Leafs_Port-Channel53
+interface Port-Channel971
+   description L2_SPINES_Port-Channel3
    no shutdown
-   switchport trunk allowed vlan 11-12,21-22,3401-3402
+   switchport trunk allowed vlan 4092
    switchport mode trunk
    switchport
+```
+
+### VLAN Interfaces
+
+#### VLAN Interfaces Summary
+
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan4092 | Inband Management | default | 1500 | False |
+
+##### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ------ | ------- |
+| Vlan4092 |  default  |  10.40.92.6/24  |  -  |  -  |  -  |  -  |
+
+#### VLAN Interfaces Device Configuration
+
+```eos
+!
+interface Vlan4092
+   description Inband Management
+   no shutdown
+   mtu 1500
+   ip address 10.40.92.6/24
 ```
 
 ## Routing
@@ -301,6 +363,21 @@ service routing protocols model multi-agent
 | --- | --------------- |
 | default | False |
 | default | false |
+
+### Static Routes
+
+#### Static Routes Summary
+
+| VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
+| --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| default | 0.0.0.0/0 | 10.40.92.1 | - | 1 | - | - | - |
+
+#### Static Routes Device Configuration
+
+```eos
+!
+ip route 0.0.0.0/0 10.40.92.1
+```
 
 ## Multicast
 

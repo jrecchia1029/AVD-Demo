@@ -1,0 +1,54 @@
+---
+### group_vars/DC1.yml
+
+# avd_eos_designs_debug: True  # <bool; default=False>
+
+cvp_instance_ips:
+  - apiserver.arista.io
+terminattr_disable_aaa: True
+
+# local users
+local_users:
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ikGzKyb6w4yEqLly$mJLofKfPrT2Mx6UffrY2dwFXuTCbtf2Okjfu9CgyuduVdN3WIrq9quRZXXFjrRI754ewFQ3uZSlwSEKAe2zbP1
+
+# AAA Authorization
+aaa_authorization:
+  exec:
+    default: local
+
+# vEOS
+p2p_uplinks_mtu: 1500
+
+# Max spines
+max_spines: 2
+
+# DNS Servers
+ip_name_servers:
+  - ip_address: 169.254.169.254
+    vrf: default
+  - ip_address: 8.8.8.8
+    vrf: default
+  - ip_address: 1.1.1.1
+    vrf: default
+
+# NTP servers
+ntp:
+  servers:
+    - name: pool.ntp.org
+      vrf: default
+
+# ACT agent
+agents:
+  - name: KernelFib
+    environment_variables:
+      - name: KERNELFIB_PROGRAM_ALL_ECMP
+        value: "'true'"
+
+custom_structured_configuration_management_interfaces:
+  - name: Management1
+    lldp:
+      transmit: false
+      receive: false

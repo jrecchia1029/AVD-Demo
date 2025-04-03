@@ -1,4 +1,4 @@
-# LEAF2C
+# NoLa-Leaf-1D
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.19/24 | - |
+| Management1 | OOB_MANAGEMENT | oob | default | 192.168.0.16/24 | - |
 
 ##### IPv6
 
@@ -58,16 +58,16 @@
 interface Management1
    description OOB_MANAGEMENT
    no shutdown
-   ip address 192.168.0.19/24
+   ip address 192.168.0.16/24
 ```
 
 ### Management API HTTP
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -227,8 +227,8 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet51 | L2_LEAF2A_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
-| Ethernet52 | L2_LEAF2B_Ethernet53 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet51 | L2_NoLa-Leaf-1A_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
+| Ethernet52 | L2_NoLa-Leaf-1B_Ethernet54 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 51 |
 
 *Inherited from Port-Channel Interface
 
@@ -237,12 +237,12 @@ vlan 3402
 ```eos
 !
 interface Ethernet51
-   description L2_LEAF2A_Ethernet53
+   description L2_NoLa-Leaf-1A_Ethernet54
    no shutdown
    channel-group 51 mode active
 !
 interface Ethernet52
-   description L2_LEAF2B_Ethernet53
+   description L2_NoLa-Leaf-1B_Ethernet54
    no shutdown
    channel-group 51 mode active
 ```
@@ -255,14 +255,14 @@ interface Ethernet52
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel51 | L2_Floor2_Leafs_Port-Channel53 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
+| Port-Channel51 | L2_Floor1_Leafs_Port-Channel54 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel51
-   description L2_Floor2_Leafs_Port-Channel53
+   description L2_Floor1_Leafs_Port-Channel54
    no shutdown
    switchport trunk allowed vlan 11-12,21-22,3401-3402
    switchport mode trunk

@@ -1,0 +1,141 @@
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - apiserver.arista.io:443
+  cvauth:
+    method: token-secure
+    token_file: /tmp/cv-onboarding-token
+  cvvrf: default
+  disable_aaa: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet25
+  description: L2_NoLa-Leaf-3A_Ethernet54
+  shutdown: false
+  channel_group:
+    id: 25
+    mode: active
+  peer: NoLa-Leaf-3A
+  peer_interface: Ethernet54
+  peer_type: leaf
+- name: Ethernet26
+  description: L2_NoLa-Leaf-3B_Ethernet54
+  shutdown: false
+  channel_group:
+    id: 25
+    mode: active
+  peer: NoLa-Leaf-3B
+  peer_interface: Ethernet54
+  peer_type: leaf
+hostname: NoLa-Leaf-3D
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+local_users:
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$ikGzKyb6w4yEqLly$mJLofKfPrT2Mx6UffrY2dwFXuTCbtf2Okjfu9CgyuduVdN3WIrq9quRZXXFjrRI754ewFQ3uZSlwSEKAe2zbP1
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: default
+management_interfaces:
+- name: Management1
+  lldp:
+    transmit: false
+    receive: false
+metadata:
+  platform: vEOS-Lab
+  fabric_name: NOLA_FABRIC
+  cv_tags:
+    device_tags:
+    - name: topology_hint_network_type
+      value: campusV2
+    - name: topology_hint_type
+      value: Member-Leaf
+    - name: Campus
+      value: NoLa
+    - name: Campus-Pod
+      value: BourbonSt
+    - name: Access-Pod
+      value: Floor3
+    interface_tags:
+    - interface: Ethernet25
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+    - interface: Ethernet26
+      tags:
+      - name: Link-Type
+        value: AVDManaged
+      - name: Link-Type
+        value: Fabric
+      - name: Link-Type
+        value: Uplink
+port_channel_interfaces:
+- name: Port-Channel25
+  description: L2_Floor3_Leafs_Port-Channel54
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402,4092
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+static_routes:
+- destination_address_prefix: 0.0.0.0/0
+  gateway: 10.40.92.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4092
+  description: Inband Management
+  shutdown: false
+  ip_address: 10.40.92.11/24
+  mtu: 1500
+  type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VRF10_VLAN11
+  tenant: TENANT1
+- id: 12
+  name: VRF10_VLAN12
+  tenant: TENANT1
+- id: 21
+  name: VRF11_VLAN21
+  tenant: TENANT1
+- id: 22
+  name: VRF11_VLAN22
+  tenant: TENANT1
+- id: 3401
+  name: L2_VLAN3401
+  tenant: TENANT1
+- id: 3402
+  name: L2_VLAN3402
+  tenant: TENANT1
+- id: 4092
+  name: INBAND_MGMT
+  tenant: system
+vrfs:
+- name: default
+  ip_routing: true
+serial_number: 11ef492f59d54586811b4aadd9c4b3e3
